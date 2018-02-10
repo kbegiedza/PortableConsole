@@ -1,21 +1,21 @@
 fileFormatVersion: 2
 guid: 41ab2d1309ef7034fb3b7476e737d03b
-timeCreated: 1518202248
+timeCreated: 1518273710
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: ProtableConsoleAtlas_0
-    21300002: ProtableConsoleAtlas_1
-    21300004: ProtableConsoleAtlas_2
-    21300006: ProtableConsoleAtlas_3
-    21300008: ProtableConsoleAtlas_4
-    21300010: ProtableConsoleAtlas_5
-    21300012: ProtableConsoleAtlas_6
-    21300014: ProtableConsoleAtlas_7
-    21300016: ProtableConsoleAtlas_8
+    21300000: icon_copy
+    21300002: icon_lock_locked
+    21300004: icon_close_light
+    21300006: icon_warning_light
+    21300008: icon_close_dark
+    21300010: icon_lock_unlocked
+    21300012: icon_info_light
+    21300014: icon_settings_dark
+    21300016: icon_merge
     21300018: ProtableConsoleAtlas_9
     21300020: ProtableConsoleAtlas_10
-    21300022: ProtableConsoleAtlas_11
+    21300022: icon_error_light
     21300024: ProtableConsoleAtlas_12
   externalObjects: {}
   serializedVersion: 4
@@ -133,7 +133,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_0
+      name: icon_copy
       rect:
         serializedVersion: 2
         x: 0
@@ -141,13 +141,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_1
+      name: icon_lock_locked
       rect:
         serializedVersion: 2
         x: 402
@@ -155,13 +155,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_2
+      name: icon_close_light
       rect:
         serializedVersion: 2
         x: 804
@@ -169,13 +169,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_3
+      name: icon_warning_light
       rect:
         serializedVersion: 2
         x: 1206
@@ -183,13 +183,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_4
+      name: icon_close_dark
       rect:
         serializedVersion: 2
         x: 0
@@ -197,13 +197,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_5
+      name: icon_lock_unlocked
       rect:
         serializedVersion: 2
         x: 402
@@ -211,13 +211,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_6
+      name: icon_info_light
       rect:
         serializedVersion: 2
         x: 804
@@ -225,13 +225,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_7
+      name: icon_settings_dark
       rect:
         serializedVersion: 2
         x: 0
@@ -239,13 +239,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_8
+      name: icon_merge
       rect:
         serializedVersion: 2
         x: 402
@@ -253,7 +253,7 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -267,7 +267,7 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -281,13 +281,13 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ProtableConsoleAtlas_11
+      name: icon_error_light
       rect:
         serializedVersion: 2
         x: 402
@@ -295,7 +295,7 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -309,7 +309,7 @@ TextureImporter:
         width: 400
         height: 400
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
