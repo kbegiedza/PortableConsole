@@ -31,6 +31,11 @@ public class Testing : MonoBehaviour
         {
             Debug.LogError(":D");
         }
+
+        if(Input.GetKey(KeyCode.F4))
+        {
+            Debug.LogError("hold...");
+        }
     }
 
     //------------------------------
