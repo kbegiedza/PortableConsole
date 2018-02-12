@@ -35,8 +35,7 @@ namespace PortableConsole
         private Text ErrorCounter;
 
         private List<PortableConsoleLog> _logs = new List<PortableConsoleLog>();
-
-        private PortableConsoleLogType _logType = PortableConsoleLogType.Info | PortableConsoleLogType.Warning | PortableConsoleLogType.Error;
+        private PortableConsoleLogType _logFilter = PortableConsoleLogType.Info | PortableConsoleLogType.Warning | PortableConsoleLogType.Error;
         //------------------------------
         // Unity methods
         //------------------------------
@@ -61,7 +60,7 @@ namespace PortableConsole
         //------------------------------
         public void OnClickClearButton()
         {
-            foreach(Transform child in Content.transform)
+            foreach (Transform child in Content.transform)
             {
                 Destroy(child.gameObject);
             }
@@ -76,44 +75,17 @@ namespace PortableConsole
 
         public void OnClickInfoButton()
         {
-            if ((_logType & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
-            {
-                _logType = _logType & ~PortableConsoleLogType.Info;
-            }
-            else
-            {
-                _logType = (_logType | PortableConsoleLogType.Info);
-            }
-
-            DrawConsoleLogs();
+            ChangeFilter(PortableConsoleLogType.Info);
         }
 
         public void OnClickWarningButton()
         {
-            if((_logType & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
-            {
-                _logType = _logType & ~PortableConsoleLogType.Warning;
-            }
-            else
-            {
-                _logType = (_logType | PortableConsoleLogType.Warning);
-            }
-
-            DrawConsoleLogs();
+            ChangeFilter(PortableConsoleLogType.Warning);
         }
 
         public void OnClickErrorButton()
         {
-            if ((_logType & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
-            {
-                _logType = _logType & ~PortableConsoleLogType.Error;
-            }
-            else
-            {
-                _logType = (_logType | PortableConsoleLogType.Error);
-            }
-
-            DrawConsoleLogs();
+            ChangeFilter(PortableConsoleLogType.Error);
         }
 
         public void OnClickCloseButton()
@@ -124,9 +96,23 @@ namespace PortableConsole
         //------------------------------
         // private methods
         //------------------------------
+        private void ChangeFilter(PortableConsoleLogType type)
+        {
+            if ((_logFilter & type) == type)
+            {
+                _logFilter = _logFilter & ~type;
+            }
+            else
+            {
+                _logFilter = (_logFilter | type);
+            }
+
+            RedrawConsoleLogs();
+        }
+
         private void Setup()
         {
-            if(Resources == null)
+            if (Resources == null)
             {
                 throw new System.NullReferenceException("PortableConsoleResources is null!");
             }
@@ -153,7 +139,11 @@ namespace PortableConsole
 
         private void LogMessageReceived(string condition, string stackTrace, LogType type)
         {
-            uint _logCount = 0;
+            _logs.Add(new PortableConsoleLog(type, condition, stackTrace));
+
+            var currentAdded = _logs[_logs.Count - 1];
+
+            uint currentCount = 0;
             bool draw = false;
 
             switch (type)
@@ -162,116 +152,66 @@ namespace PortableConsole
                 case LogType.Error:
                 case LogType.Exception:
                     {
-                        if((_logType & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
+                        if ((_logFilter & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
                         {
                             draw = true;
+                            currentCount += _errorCounter;
+
+                            _errorCounter++;
                         }
-                    } 
+                    }
                     break;
                 case LogType.Log:
                     {
-                        if ((_logType & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
+                        if ((_logFilter & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
                         {
                             draw = true;
+                            currentCount += _warningCounter;
+
+                            _warningCounter++;
                         }
                     }
                     break;
                 case LogType.Warning:
                     {
-                        if ((_logType & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
+                        if ((_logFilter & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
                         {
                             draw = true;
+                            currentCount += _infoCounter;
+
+                            _infoCounter++;
                         }
                     }
                     break;
             }
 
-            if ((_logType & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
+
+            if (draw)
             {
-                _logCount += _errorCounter;
-            }
-
-            if ((_logType & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
-            {
-                _logCount += _warningCounter;
-            }
-
-            if ((_logType & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
-            {
-                _logCount += _infoCounter;
-            }
-
-
-            if(draw)
-            {
-                //create instance
-                var g = Instantiate(LogTemplate, Content.transform).GetComponent<RectTransform>();
-
-                //set background color
-                var bg = g.GetComponent<Image>();
-                bg.color = ((_logCount & 1) == 0) ? FirstColor : SecondColor;
-
-                //set correspond image
-                var icon = g.transform.Find("Icon").GetComponent<Image>();
-                icon.sprite = Resources.GetLogTypeIconSprite(type);
-
-                //update text content
-                var logContent = g.transform.Find("Content").GetComponent<Text>();
-                var logCaster = g.transform.Find("Caster").GetComponent<Text>();
-
-                logContent.text = condition;
-                logCaster.text = stackTrace.Trim(' ');
-
-                //manage item's position and size
-                var size = new Vector2(0, 100);
-                var offset = (size/2f) + size * _logCount;
-
-                g.sizeDelta = size;
-                g.anchoredPosition -= offset;
-
-                //update scroll rect's content size
-                Content.sizeDelta += size;
-            }
-
-            _logs.Add(new PortableConsoleLog(type, condition, stackTrace));
-
-            switch (type)
-            {
-                case LogType.Assert:
-                case LogType.Error:
-                case LogType.Exception:
-                    _errorCounter++;
-                    break;
-                case LogType.Log:
-                    _infoCounter++;
-                    break;
-                case LogType.Warning:
-                    _warningCounter++;
-                    break;
+                DrawConsoleLog(currentAdded, currentCount);
             }
 
             UpdateLogCount();
         }
 
-        private void DrawConsoleLogs()
+        private void RedrawConsoleLogs()
         {
-            foreach(Transform t in Content.transform)
+            foreach (Transform t in Content.transform)
             {
                 Destroy(t.gameObject);
             }
             Content.sizeDelta = Vector2.zero;
 
-            int i = 0;
+            uint i = 0;
             foreach (var l in _logs)
             {
-
                 switch (l.LogType)
                 {
                     case LogType.Assert:
                     case LogType.Error:
                     case LogType.Exception:
                         {
-                            if ((_logType & PortableConsoleLogType.Error) != PortableConsoleLogType.Error)
+                            if ((_logFilter & PortableConsoleLogType.Error) != PortableConsoleLogType.Error)
                             {
                                 continue;
                             }
@@ -279,7 +219,7 @@ namespace PortableConsole
                         break;
                     case LogType.Log:
                         {
-                            if ((_logType & PortableConsoleLogType.Info) != PortableConsoleLogType.Info)
+                            if ((_logFilter & PortableConsoleLogType.Info) != PortableConsoleLogType.Info)
                             {
                                 continue;
                             }
@@ -287,7 +227,7 @@ namespace PortableConsole
                         break;
                     case LogType.Warning:
                         {
-                            if ((_logType & PortableConsoleLogType.Warning) != PortableConsoleLogType.Warning)
+                            if ((_logFilter & PortableConsoleLogType.Warning) != PortableConsoleLogType.Warning)
                             {
                                 continue;
                             }
@@ -295,35 +235,41 @@ namespace PortableConsole
                         break;
                 }
 
-                //create instance
-                var g = Instantiate(LogTemplate, Content.transform).GetComponent<RectTransform>();
+                DrawConsoleLog(l, i);
 
-                //set background color
-                var bg = g.GetComponent<Image>();
-                bg.color = ((i & 1) == 0) ? FirstColor : SecondColor;
-
-                //set correspond image
-                var icon = g.transform.Find("Icon").GetComponent<Image>();
-                icon.sprite = Resources.GetLogTypeIconSprite(l.LogType);
-
-                //update text content
-                var logContent = g.transform.Find("Content").GetComponent<Text>();
-                var logCaster = g.transform.Find("Caster").GetComponent<Text>();
-
-                logContent.text = l.Name;
-                logCaster.text = l.Caster;
-
-                //manage item's position and size
-                var size = new Vector2(0, 100);
-                var offset = (size / 2f) + size * i;
-
-                g.sizeDelta = size;
-                g.anchoredPosition -= offset;
-
-                //update scroll rect's content size
-                Content.sizeDelta += size;
                 i++;
             }
+        }
+
+        private void DrawConsoleLog(PortableConsoleLog log, uint counter)
+        {
+            //create instance
+            var g = Instantiate(LogTemplate, Content.transform).GetComponent<RectTransform>();
+
+            //set background color
+            var bg = g.GetComponent<Image>();
+            bg.color = ((counter & 1) == 0) ? FirstColor : SecondColor;
+
+            //set correspond image
+            var icon = g.transform.Find("Icon").GetComponent<Image>();
+            icon.sprite = Resources.GetLogTypeIconSprite(log.LogType);
+
+            //update text content
+            var logContent = g.transform.Find("Content").GetComponent<Text>();
+            var logCaster = g.transform.Find("Caster").GetComponent<Text>();
+
+            logContent.text = log.Name;
+            logCaster.text = log.Caster;
+
+            //manage item's position and size
+            var size = new Vector2(0, 100);
+            var offset = (size / 2f) + size * counter;
+
+            g.sizeDelta = size;
+            g.anchoredPosition -= offset;
+
+            //update scroll rect's content size
+            Content.sizeDelta += size;
         }
 
         private void UpdateLogCount()
@@ -335,7 +281,7 @@ namespace PortableConsole
 
         private string GetCounterText(uint value)
         {
-            if(value < 100)
+            if (value < 100)
             {
                 return value.ToString();
             }
