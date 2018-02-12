@@ -146,6 +146,21 @@ namespace PortableConsole
             uint currentCount = 0;
             bool draw = false;
 
+            if ((_logFilter & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
+            {
+                currentCount += _errorCounter;
+            }
+
+            if ((_logFilter & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
+            {
+                currentCount += _infoCounter;
+            }
+            if ((_logFilter & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
+            {
+                currentCount += _warningCounter;
+            }
+
+
             switch (type)
             {
                 case LogType.Assert:
@@ -155,7 +170,6 @@ namespace PortableConsole
                         if ((_logFilter & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
                         {
                             draw = true;
-                            currentCount += _errorCounter;
 
                             _errorCounter++;
                         }
@@ -166,9 +180,8 @@ namespace PortableConsole
                         if ((_logFilter & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
                         {
                             draw = true;
-                            currentCount += _warningCounter;
 
-                            _warningCounter++;
+                            _infoCounter++;
                         }
                     }
                     break;
@@ -177,14 +190,13 @@ namespace PortableConsole
                         if ((_logFilter & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
                         {
                             draw = true;
-                            currentCount += _infoCounter;
 
-                            _infoCounter++;
+                            _warningCounter++;
                         }
                     }
                     break;
             }
-
+           
 
             if (draw)
             {
