@@ -4,31 +4,18 @@ using UnityEngine.UI;
 
 namespace PortableConsole
 {
-    [System.Flags]
-    public enum PortableConsoleLogType
-    {
-        None = 0,
-        Info = 1,
-        Warning = 2,
-        Error = 4,
-    }
-
     public class PortableConsole : MonoBehaviour
     {
+        //todo: make sure that EventSystem is available
         public PortableConsoleResources Resources;
 
         public GameObject LogTemplate;
 
-        public Color FirstColor;
-        public Color SecondColor;
+        public Button ToggleButton;
 
         public RectTransform Content;
 
         private GameObject _consoleContent;
-
-        private uint _infoCounter;
-        private uint _warningCounter;
-        private uint _errorCounter;
 
         private Text InfoCounter;
         private Text WarningCounter;
@@ -36,6 +23,14 @@ namespace PortableConsole
 
         private List<PortableConsoleLog> _logs = new List<PortableConsoleLog>();
         private PortableConsoleLogType _logFilter = PortableConsoleLogType.Info | PortableConsoleLogType.Warning | PortableConsoleLogType.Error;
+
+        private Dictionary<PortableConsoleLogType, uint> _logCounters = new Dictionary<PortableConsoleLogType, uint>
+        {
+            { PortableConsoleLogType.Info, 0},
+            { PortableConsoleLogType.Warning, 0},
+            { PortableConsoleLogType.Error, 0},
+        };
+
         //------------------------------
         // Unity methods
         //------------------------------
@@ -43,8 +38,7 @@ namespace PortableConsole
         {
             Setup();
 
-            //attach our logger to Unity's event
-            Application.logMessageReceived += LogMessageReceived;
+            ToggleButton.onClick.AddListener(ToggleContent);
         }
 
         private void Start()
@@ -68,7 +62,10 @@ namespace PortableConsole
             Content.sizeDelta = Vector2.zero;
 
             _logs.Clear();
-            _infoCounter = _warningCounter = _errorCounter = 0;
+            foreach(var key in _logCounters.Keys)
+            {
+                _logCounters[key] = 0;
+            }
 
             UpdateLogCount();
         }
@@ -90,12 +87,24 @@ namespace PortableConsole
 
         public void OnClickCloseButton()
         {
-            CloseConsoleContent();
+            HideConsoleContent();
         }
 
         //------------------------------
         // private methods
         //------------------------------
+        private void ToggleContent()
+        {
+            if (_consoleContent.activeInHierarchy)
+            {
+                HideConsoleContent();
+            }
+            else
+            {
+                ShowConsoleContent();
+            }
+        }
+
         private void ChangeFilter(PortableConsoleLogType type)
         {
             if ((_logFilter & type) == type)
@@ -117,24 +126,31 @@ namespace PortableConsole
                 throw new System.NullReferenceException("PortableConsoleResources is null!");
             }
 
-            _consoleContent = transform.Find("PortableConsoleContent").gameObject;
+            _consoleContent = transform.Find("Canvas").Find("Console").gameObject;
 
             var firstTopBar = _consoleContent.transform.Find("TopBar").Find("FirstTopBar");
             InfoCounter = firstTopBar.Find("ToggleInfoButton").Find("Counter").GetComponent<Text>();
             WarningCounter = firstTopBar.Find("ToggleWarningButton").Find("Counter").GetComponent<Text>();
             ErrorCounter = firstTopBar.Find("ToggleErrorButton").Find("Counter").GetComponent<Text>();
 
+            //attach our logger to Unity's event
+            Application.logMessageReceived += LogMessageReceived;
+
             UpdateLogCount();
         }
 
-        private void OpenConsoleContent()
+        private void ShowConsoleContent()
         {
             _consoleContent.SetActive(true);
+
+            ToggleButton.gameObject.SetActive(false);
         }
 
-        private void CloseConsoleContent()
+        private void HideConsoleContent()
         {
             _consoleContent.SetActive(false);
+
+            ToggleButton.gameObject.SetActive(true);
         }
 
         private void LogMessageReceived(string condition, string stackTrace, LogType type)
@@ -148,55 +164,24 @@ namespace PortableConsole
 
             if ((_logFilter & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
             {
-                currentCount += _errorCounter;
+                currentCount += _logCounters[PortableConsoleLogType.Error];
             }
 
             if ((_logFilter & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
             {
-                currentCount += _infoCounter;
+                currentCount += _logCounters[PortableConsoleLogType.Info];
             }
             if ((_logFilter & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
             {
-                currentCount += _warningCounter;
+                currentCount += _logCounters[PortableConsoleLogType.Warning];
             }
 
+            _logCounters[currentAdded.LogType]++;
 
-            switch (type)
+            if ((_logFilter & currentAdded.LogType) == currentAdded.LogType)
             {
-                case LogType.Assert:
-                case LogType.Error:
-                case LogType.Exception:
-                    {
-                        if ((_logFilter & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
-                        {
-                            draw = true;
-
-                            _errorCounter++;
-                        }
-                    }
-                    break;
-                case LogType.Log:
-                    {
-                        if ((_logFilter & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
-                        {
-                            draw = true;
-
-                            _infoCounter++;
-                        }
-                    }
-                    break;
-                case LogType.Warning:
-                    {
-                        if ((_logFilter & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
-                        {
-                            draw = true;
-
-                            _warningCounter++;
-                        }
-                    }
-                    break;
+                draw = true;
             }
-           
 
             if (draw)
             {
@@ -217,38 +202,12 @@ namespace PortableConsole
             uint i = 0;
             foreach (var l in _logs)
             {
-                switch (l.LogType)
+                if ((_logFilter & l.LogType) != l.LogType)
                 {
-                    case LogType.Assert:
-                    case LogType.Error:
-                    case LogType.Exception:
-                        {
-                            if ((_logFilter & PortableConsoleLogType.Error) != PortableConsoleLogType.Error)
-                            {
-                                continue;
-                            }
-                        }
-                        break;
-                    case LogType.Log:
-                        {
-                            if ((_logFilter & PortableConsoleLogType.Info) != PortableConsoleLogType.Info)
-                            {
-                                continue;
-                            }
-                        }
-                        break;
-                    case LogType.Warning:
-                        {
-                            if ((_logFilter & PortableConsoleLogType.Warning) != PortableConsoleLogType.Warning)
-                            {
-                                continue;
-                            }
-                        }
-                        break;
+                    continue;
                 }
 
                 DrawConsoleLog(l, i);
-
                 i++;
             }
         }
@@ -260,7 +219,7 @@ namespace PortableConsole
 
             //set background color
             var bg = g.GetComponent<Image>();
-            bg.color = ((counter & 1) == 0) ? FirstColor : SecondColor;
+            bg.color = ((counter & 1) == 0) ? Resources.FirstColor : Resources.SecondColor;
 
             //set correspond image
             var icon = g.transform.Find("Icon").GetComponent<Image>();
@@ -286,9 +245,9 @@ namespace PortableConsole
 
         private void UpdateLogCount()
         {
-            InfoCounter.text = GetCounterText(_infoCounter);
-            WarningCounter.text = GetCounterText(_warningCounter);
-            ErrorCounter.text = GetCounterText(_errorCounter);
+            InfoCounter.text = GetCounterText(_logCounters[PortableConsoleLogType.Info]);
+            WarningCounter.text = GetCounterText(_logCounters[PortableConsoleLogType.Warning]);
+            ErrorCounter.text = GetCounterText(_logCounters[PortableConsoleLogType.Error]);
         }
 
         private string GetCounterText(uint value)

@@ -19,22 +19,22 @@ public class Testing : MonoBehaviour
 	{
         if(Input.GetKeyDown(KeyCode.F1))
         {
-            Debug.Log("1");
+            Debug.Log("F1");
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            Debug.LogWarning("xD");
+            Debug.LogWarning("F2");
         }
 
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            Debug.LogError(":D");
+            Debug.LogError("F3");
         }
 
         if(Input.GetKey(KeyCode.F4))
         {
-            Debug.LogError("hold...");
+            Debug.LogError("holding F4");
         }
     }
 

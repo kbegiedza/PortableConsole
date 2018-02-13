@@ -11,6 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d47b2ada44e868a4cbe6ba384d866511, type: 3}
   m_Name: PortableConsoleResources
   m_EditorClassIdentifier: 
+  FirstColor: {r: 0.29411766, g: 0.29411766, b: 0.29411766, a: 1}
+  SecondColor: {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
   InfoSprite: {fileID: 21300012, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
   WarningSprite: {fileID: 21300006, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
   ErrorSprite: {fileID: 21300022, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
