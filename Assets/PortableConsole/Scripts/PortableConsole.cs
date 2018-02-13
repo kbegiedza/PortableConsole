@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -62,7 +63,7 @@ namespace PortableConsole
             Content.sizeDelta = Vector2.zero;
 
             _logs.Clear();
-            foreach(var key in _logCounters.Keys)
+            foreach(var key in _logCounters.Keys.ToList())
             {
                 _logCounters[key] = 0;
             }
