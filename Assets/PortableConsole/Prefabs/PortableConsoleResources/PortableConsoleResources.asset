@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d47b2ada44e868a4cbe6ba384d866511, type: 3}
+  m_Name: PortableConsoleResources
+  m_EditorClassIdentifier: 
+  DefaultStyle:
+    FirstColor: {r: 0.23529413, g: 0.23529413, b: 0.23529413, a: 1}
+    SecondColor: {r: 0.27450982, g: 0.27450982, b: 0.27450982, a: 1}
+    InfoSprite: {fileID: 21300012, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
+    WarningSprite: {fileID: 21300006, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
+    ErrorSprite: {fileID: 21300022, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
