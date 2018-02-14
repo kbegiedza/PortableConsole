@@ -26,6 +26,7 @@ namespace PortableConsole
                     return ErrorSprite;
             }
         }
+
 #if UNITY_EDITOR
         //todo: move it to portable console script (+ creator popup)
         [MenuItem("PortableConsole/CreateInstance")]

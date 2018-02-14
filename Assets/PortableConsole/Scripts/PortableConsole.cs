@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace PortableConsole
 {
     public class PortableConsole : MonoBehaviour
     {
-        //todo: make sure that EventSystem is available
+        private static string _defaultEventSystemName = "DefaultEventSystem";
+
         public PortableConsoleResources Resources;
-
         public GameObject LogTemplate;
-
         public Button ToggleButton;
-
         public RectTransform Content;
 
         private GameObject _consoleContent;
@@ -122,6 +121,15 @@ namespace PortableConsole
 
         private void Setup()
         {
+            //check for EventSystem and create if required
+            var eventSystem = FindObjectOfType<EventSystem>();
+            if(eventSystem == null)
+            {
+                GameObject obj = new GameObject(_defaultEventSystemName);
+                obj.AddComponent<EventSystem>();
+                obj.AddComponent<StandaloneInputModule>();
+            }
+
             if (Resources == null)
             {
                 throw new System.NullReferenceException("PortableConsoleResources is null!");
