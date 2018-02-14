@@ -7,23 +7,19 @@ namespace PortableConsole
 {
     public class PortableConsoleResources : ScriptableObject
     {
-        public Color FirstColor = Color.white;
-        public Color SecondColor = Color.grey;
-        public Sprite InfoSprite;
-        public Sprite WarningSprite;
-        public Sprite ErrorSprite;
+        public PortableConsoleStyle DefaultStyle;
 
         public Sprite GetLogTypeIconSprite(PortableConsoleLogType type)
         {
             switch (type)
             {
                 case PortableConsoleLogType.Info:
-                    return InfoSprite;
+                    return DefaultStyle.InfoSprite;
                 case PortableConsoleLogType.Warning:
-                    return WarningSprite;
+                    return DefaultStyle.WarningSprite;
                 case PortableConsoleLogType.Error:
                 default:
-                    return ErrorSprite;
+                    return DefaultStyle.ErrorSprite;
             }
         }
 

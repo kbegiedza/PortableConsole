@@ -166,35 +166,23 @@ namespace PortableConsole
         {
             _logs.Add(new PortableConsoleLog(type, condition, stackTrace));
 
-            var currentAdded = _logs[_logs.Count - 1];
+            var currentLog = _logs[_logs.Count - 1];
 
             uint currentCount = 0;
-            bool draw = false;
 
-            if ((_logFilter & PortableConsoleLogType.Error) == PortableConsoleLogType.Error)
+            foreach (var key in _logCounters.Keys)
             {
-                currentCount += _logCounters[PortableConsoleLogType.Error];
+                if ((_logFilter & key) == key)
+                {
+                    currentCount += _logCounters[key];
+                }
             }
 
-            if ((_logFilter & PortableConsoleLogType.Info) == PortableConsoleLogType.Info)
-            {
-                currentCount += _logCounters[PortableConsoleLogType.Info];
-            }
-            if ((_logFilter & PortableConsoleLogType.Warning) == PortableConsoleLogType.Warning)
-            {
-                currentCount += _logCounters[PortableConsoleLogType.Warning];
-            }
+            _logCounters[currentLog.LogType]++;
 
-            _logCounters[currentAdded.LogType]++;
-
-            if ((_logFilter & currentAdded.LogType) == currentAdded.LogType)
+            if ((_logFilter & currentLog.LogType) == currentLog.LogType)
             {
-                draw = true;
-            }
-
-            if (draw)
-            {
-                DrawConsoleLog(currentAdded, currentCount);
+                DrawConsoleLog(currentLog, currentCount);
             }
 
             UpdateLogCount();
@@ -228,7 +216,7 @@ namespace PortableConsole
 
             //set background color
             var bg = g.GetComponent<Image>();
-            bg.color = ((counter & 1) == 0) ? Resources.FirstColor : Resources.SecondColor;
+            bg.color = ((counter & 1) == 0) ? Resources.DefaultStyle.FirstColor : Resources.DefaultStyle.SecondColor;
 
             //set correspond image
             var icon = g.transform.Find("Icon").GetComponent<Image>();
