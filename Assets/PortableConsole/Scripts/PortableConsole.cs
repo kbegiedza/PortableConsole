@@ -10,13 +10,15 @@ namespace PortableConsole
     {
         private static string _defaultEventSystemName = "DefaultEventSystem";
 
-        public PortableConsoleResources Resources;
-        public GameObject LogTemplate;
-        public Button ToggleButton;
-        public RectTransform Content;
+        [SerializeField]
+        private PortableConsoleResources _resources;
+        [SerializeField]
+        private GameObject _logTemplate;
+        [SerializeField]
+        private Button _toggleButton;
 
+        private RectTransform _logContainer;
         private GameObject _consoleContent;
-
         private Text InfoCounter;
         private Text WarningCounter;
         private Text ErrorCounter;
@@ -38,7 +40,7 @@ namespace PortableConsole
         {
             Setup();
 
-            ToggleButton.onClick.AddListener(ToggleContent);
+            _toggleButton.onClick.AddListener(ToggleContent);
         }
 
         private void Start()
@@ -54,12 +56,12 @@ namespace PortableConsole
         //------------------------------
         public void OnClickClearButton()
         {
-            foreach (Transform child in Content.transform)
+            foreach (Transform child in _logContainer.transform)
             {
                 Destroy(child.gameObject);
             }
 
-            Content.sizeDelta = Vector2.zero;
+            _logContainer.sizeDelta = Vector2.zero;
 
             _logs.Clear();
             foreach(var key in _logCounters.Keys.ToList())
@@ -130,12 +132,13 @@ namespace PortableConsole
                 obj.AddComponent<StandaloneInputModule>();
             }
 
-            if (Resources == null)
+            if (_resources == null)
             {
                 throw new System.NullReferenceException("PortableConsoleResources is null!");
             }
 
             _consoleContent = transform.Find("Canvas").Find("Console").gameObject;
+            _logContainer = _consoleContent.transform.Find("MainContent").Find("Viewport").Find("Content").GetComponent<RectTransform>();
 
             var firstTopBar = _consoleContent.transform.Find("TopBar").Find("FirstTopBar");
             InfoCounter = firstTopBar.Find("ToggleInfoButton").Find("Counter").GetComponent<Text>();
@@ -152,14 +155,14 @@ namespace PortableConsole
         {
             _consoleContent.SetActive(true);
 
-            ToggleButton.gameObject.SetActive(false);
+            _toggleButton.gameObject.SetActive(false);
         }
 
         private void HideConsoleContent()
         {
             _consoleContent.SetActive(false);
 
-            ToggleButton.gameObject.SetActive(true);
+            _toggleButton.gameObject.SetActive(true);
         }
 
         private void LogMessageReceived(string condition, string stackTrace, LogType type)
@@ -190,11 +193,11 @@ namespace PortableConsole
 
         private void RedrawConsoleLogs()
         {
-            foreach (Transform t in Content.transform)
+            foreach (Transform t in _logContainer.transform)
             {
                 Destroy(t.gameObject);
             }
-            Content.sizeDelta = Vector2.zero;
+            _logContainer.sizeDelta = Vector2.zero;
 
             uint i = 0;
             foreach (var l in _logs)
@@ -212,15 +215,15 @@ namespace PortableConsole
         private void DrawConsoleLog(PortableConsoleLog log, uint counter)
         {
             //create instance
-            var g = Instantiate(LogTemplate, Content.transform).GetComponent<RectTransform>();
+            var g = Instantiate(_logTemplate, _logContainer.transform).GetComponent<RectTransform>();
 
             //set background color
             var bg = g.GetComponent<Image>();
-            bg.color = ((counter & 1) == 0) ? Resources.DefaultStyle.FirstColor : Resources.DefaultStyle.SecondColor;
+            bg.color = ((counter & 1) == 0) ? _resources.DefaultStyle.FirstColor : _resources.DefaultStyle.SecondColor;
 
             //set correspond image
             var icon = g.transform.Find("Icon").GetComponent<Image>();
-            icon.sprite = Resources.GetLogTypeIconSprite(log.LogType);
+            icon.sprite = _resources.GetLogTypeIconSprite(log.LogType);
 
             //update text content
             var logContent = g.transform.Find("Content").GetComponent<Text>();
@@ -237,7 +240,7 @@ namespace PortableConsole
             g.anchoredPosition -= offset;
 
             //update scroll rect's content size
-            Content.sizeDelta += size;
+            _logContainer.sizeDelta += size;
         }
 
         private void UpdateLogCount()

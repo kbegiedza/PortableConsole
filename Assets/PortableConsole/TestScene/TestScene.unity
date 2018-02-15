@@ -113,6 +113,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &388985134 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114997081951445244, guid: 14b544df49bee0a4fab1ef635441f8e7,
+    type: 2}
+  m_PrefabInternal: {fileID: 1716966841}
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &1347975215
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,6 +251,29 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114064565972029786, guid: 14b544df49bee0a4fab1ef635441f8e7,
+        type: 2}
+      propertyPath: _resources
+      value: 
+      objectReference: {fileID: 11400000, guid: a97f47be8703ec84fa5c8092a2b28dce,
+        type: 2}
+    - target: {fileID: 114064565972029786, guid: 14b544df49bee0a4fab1ef635441f8e7,
+        type: 2}
+      propertyPath: _toggleButton
+      value: 
+      objectReference: {fileID: 388985134}
+    - target: {fileID: 114064565972029786, guid: 14b544df49bee0a4fab1ef635441f8e7,
+        type: 2}
+      propertyPath: _logTemplate
+      value: 
+      objectReference: {fileID: 1392341596544776, guid: 58fb7b3162aadf044af51a71b6a1fafa,
+        type: 2}
+    - target: {fileID: 114301652159395378, guid: 14b544df49bee0a4fab1ef635441f8e7,
+        type: 2}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: e596a647f8170aa45a55ea51216135d2,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 14b544df49bee0a4fab1ef635441f8e7, type: 2}
   m_IsPrefabParent: 0
