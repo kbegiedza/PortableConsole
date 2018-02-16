@@ -10,6 +10,9 @@ namespace PortableConsole
         private SerializedProperty _resources;
         private SerializedProperty _logTemplate;
         private SerializedProperty _toggleButton;
+
+        private bool _resourceToggle = false;
+        private bool _advancedToggle = false;
         //------------------------------
         // Unity methods
         //------------------------------
@@ -25,11 +28,24 @@ namespace PortableConsole
         {
             EditorGUILayout.PropertyField(_toggleButton, true);
 
-            EditorGUILayout.Separator();
-            EditorGUILayout.PropertyField(_resources,true);
+            EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(_logTemplate, true);
-            EditorGUILayout.Separator();
+            _advancedToggle = EditorGUILayout.Foldout(_advancedToggle, "Advanced options:");
+            if (_advancedToggle)
+            {
+                if(GUILayout.Button(_resourceToggle ? "Lock" : "Unlock"))
+                {
+                    _resourceToggle = !_resourceToggle;
+                }
+
+                EditorGUI.BeginDisabledGroup(!_resourceToggle);
+                {
+                    EditorGUILayout.PropertyField(_resources, true);
+                    EditorGUILayout.PropertyField(_logTemplate, true);
+                }
+                EditorGUI.EndDisabledGroup();
+            }
+
 
             serializedObject.ApplyModifiedProperties();
         }

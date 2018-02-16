@@ -266,7 +266,7 @@ Prefab:
         type: 2}
       propertyPath: _logTemplate
       value: 
-      objectReference: {fileID: 1392341596544776, guid: 58fb7b3162aadf044af51a71b6a1fafa,
+      objectReference: {fileID: 1392341596544776, guid: 47a7f3f09ecf70945aef421df4e0ae2a,
         type: 2}
     - target: {fileID: 114301652159395378, guid: 14b544df49bee0a4fab1ef635441f8e7,
         type: 2}
