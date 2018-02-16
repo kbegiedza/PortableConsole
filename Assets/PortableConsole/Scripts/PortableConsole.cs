@@ -16,6 +16,8 @@ namespace PortableConsole
         private GameObject _logTemplate;
         [SerializeField]
         private Button _toggleButton;
+        [SerializeField]
+        private bool _useDefaultButton = true;
 
         private RectTransform _logContainer;
         private GameObject _consoleContent;

@@ -10,6 +10,7 @@ namespace PortableConsole
         private SerializedProperty _resources;
         private SerializedProperty _logTemplate;
         private SerializedProperty _toggleButton;
+        private SerializedProperty _useDefaultButton;
 
         private bool _resourceToggle = false;
         private bool _advancedToggle = false;
@@ -22,11 +23,40 @@ namespace PortableConsole
             _resources = serializedObject.FindProperty("_resources");
             _logTemplate = serializedObject.FindProperty("_logTemplate");
             _toggleButton = serializedObject.FindProperty("_toggleButton");
+            _useDefaultButton = serializedObject.FindProperty("_useDefaultButton");
         }
 
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.PropertyField(_toggleButton, true);
+            EditorGUILayout.Space();
+
+            var script = (PortableConsole)target;
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(_useDefaultButton);
+            var defaultChanged = EditorGUI.EndChangeCheck();
+            if (_useDefaultButton.boolValue)
+            {
+                if(defaultChanged)
+                {
+                    _toggleButton.objectReferenceValue = script.gameObject.transform.Find("Canvas").Find("DefaultOpenButton").gameObject;
+                }
+
+                EditorGUI.BeginDisabledGroup(true);
+                {
+                    EditorGUILayout.PropertyField(_toggleButton);
+                }
+                EditorGUI.EndDisabledGroup();
+            }
+            else
+            {
+                if (defaultChanged)
+                {
+                    _toggleButton.objectReferenceValue = null;
+                }
+
+                EditorGUILayout.PropertyField(_toggleButton);
+            }
 
             EditorGUILayout.Space();
 
