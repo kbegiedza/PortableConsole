@@ -18,6 +18,13 @@ namespace PortableConsole
         // Unity methods
         //------------------------------
 
+        [MenuItem("PortableConsole/CreateInstance")]
+        public static void CreateInstance()
+        {
+            PortableConsoleResources resources = new PortableConsoleResources();
+            AssetDatabase.CreateAsset(resources, "Assets/PortableConsole/Prefabs/PortableConsoleResources.asset");
+        }
+
         private void OnEnable()
         {
             _resources = serializedObject.FindProperty("_resources");

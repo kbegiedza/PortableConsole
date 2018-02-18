@@ -22,15 +22,5 @@ namespace PortableConsole
                     return DefaultStyle.ErrorSprite;
             }
         }
-
-#if UNITY_EDITOR
-        //todo: move it to portable console script (+ creator popup)
-        [MenuItem("PortableConsole/CreateInstance")]
-        public static void CreateInstance()
-        {
-            PortableConsoleResources resources = new PortableConsoleResources();
-            AssetDatabase.CreateAsset(resources, "Assets/PortableConsole/Prefabs/PortableConsoleResources.asset");
-        }
-#endif
     }
 }
