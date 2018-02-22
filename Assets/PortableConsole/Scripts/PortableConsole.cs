@@ -25,6 +25,12 @@ namespace PortableConsole
         private Text WarningCounter;
         private Text ErrorCounter;
 
+        private GameObject _stackTrace;
+        private Image _stackTraceIcon;
+        private RectTransform _stackTraceContent;
+        private Text _stackTraceContentText;
+        private Text _stackTraceName;
+
         private List<PortableConsoleLog> _logs = new List<PortableConsoleLog>();
         private PortableConsoleLogType _logFilter = PortableConsoleLogType.Info | PortableConsoleLogType.Warning | PortableConsoleLogType.Error;
 
@@ -66,7 +72,7 @@ namespace PortableConsole
             _logContainer.sizeDelta = Vector2.zero;
 
             _logs.Clear();
-            foreach(var key in _logCounters.Keys.ToList())
+            foreach (var key in _logCounters.Keys.ToList())
             {
                 _logCounters[key] = 0;
             }
@@ -127,7 +133,7 @@ namespace PortableConsole
         {
             //check for EventSystem and create if required
             var eventSystem = FindObjectOfType<EventSystem>();
-            if(eventSystem == null)
+            if (eventSystem == null)
             {
                 GameObject obj = new GameObject(_defaultEventSystemName);
                 obj.AddComponent<EventSystem>();
@@ -146,6 +152,13 @@ namespace PortableConsole
             InfoCounter = firstTopBar.Find("ToggleInfoButton").Find("Counter").GetComponent<Text>();
             WarningCounter = firstTopBar.Find("ToggleWarningButton").Find("Counter").GetComponent<Text>();
             ErrorCounter = firstTopBar.Find("ToggleErrorButton").Find("Counter").GetComponent<Text>();
+
+            //setup stack trace objects
+            _stackTrace = _consoleContent.transform.Find("StackTrace").gameObject;
+            _stackTraceIcon = _stackTrace.transform.Find("Icon").GetComponent<Image>();
+            _stackTraceContent = _stackTrace.transform.Find("ScrollRect").Find("Viewport").Find("Content").GetComponent<RectTransform>();
+            _stackTraceContentText = _stackTraceContent.transform.Find("Text").GetComponent<Text>();
+            _stackTraceName = _stackTrace.transform.Find("Name").GetComponent<Text>();
 
             //attach our logger to Unity's event
             Application.logMessageReceived += LogMessageReceived;
@@ -219,6 +232,13 @@ namespace PortableConsole
             //create instance
             var g = Instantiate(_logTemplate, _logContainer.transform).GetComponent<RectTransform>();
 
+            var button = g.GetComponent<Button>();
+            button.onClick = new Button.ButtonClickedEvent();
+            button.onClick.AddListener(() => 
+            {
+                ShowStackTrace(log);
+            });
+
             //set background color
             var bg = g.GetComponent<Image>();
             bg.color = ((counter & 1) == 0) ? _resources.DefaultStyle.FirstColor : _resources.DefaultStyle.SecondColor;
@@ -262,6 +282,16 @@ namespace PortableConsole
             {
                 return "99+";
             }
+        }
+
+        private void ShowStackTrace(PortableConsoleLog log)
+        {
+            _stackTraceIcon.sprite = _resources.GetLogTypeIconSprite(log.LogType);
+            _stackTraceContentText.text = log.Details;
+            _stackTraceContent.sizeDelta = new Vector3(_stackTraceContent.sizeDelta.x, _stackTraceContentText.preferredHeight);
+            _stackTraceName.text = log.Name;
+
+            _stackTrace.SetActive(true);
         }
         //------------------------------
         // coroutines

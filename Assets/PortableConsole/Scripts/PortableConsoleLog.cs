@@ -26,7 +26,7 @@ namespace PortableConsole
             LogType = GetFromLogType(type);
             Name = name;
             Details = details;
-            Caster = details.Trim(' ');
+            Caster = details.Trim(System.Environment.NewLine.ToCharArray());
         }
 
         //------------------------------
