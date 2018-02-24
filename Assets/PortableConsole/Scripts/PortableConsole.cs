@@ -10,6 +10,8 @@ namespace PortableConsole
     {
         private static string _defaultEventSystemName = "DefaultEventSystem";
 
+        public bool ScrollLocked = false;
+
         [SerializeField]
         private PortableConsoleResources _resources;
         [SerializeField]
@@ -18,6 +20,7 @@ namespace PortableConsole
         private Button _toggleButton;
         [SerializeField]
         private bool _useDefaultButton = true;
+
 
         private RectTransform _logContainer;
         private GameObject _consoleContent;
@@ -129,6 +132,7 @@ namespace PortableConsole
             RedrawConsoleLogs();
         }
 
+    
         private void Setup()
         {
             //check for EventSystem and create if required
@@ -182,9 +186,9 @@ namespace PortableConsole
 
         private void LogMessageReceived(string condition, string stackTrace, LogType type)
         {
-            _logs.Add(new PortableConsoleLog(type, condition, stackTrace));
+            var currentLog = new PortableConsoleLog(type, condition, stackTrace);
 
-            var currentLog = _logs[_logs.Count - 1];
+            _logs.Add(currentLog);
 
             uint currentCount = 0;
 
@@ -201,6 +205,11 @@ namespace PortableConsole
             if ((_logFilter & currentLog.LogType) == currentLog.LogType)
             {
                 DrawConsoleLog(currentLog, currentCount);
+            }
+
+            if(!ScrollLocked)
+            {
+                _logContainer.anchoredPosition = new Vector2(_logContainer.anchoredPosition.x, 100 * _logs.Count);
             }
 
             UpdateLogCount();
