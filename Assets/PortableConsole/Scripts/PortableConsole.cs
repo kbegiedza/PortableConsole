@@ -103,6 +103,11 @@ namespace PortableConsole
             HideConsoleContent();
         }
 
+        public void OnScrollLockButton()
+        {
+            ScrollLocked = !ScrollLocked;
+        }
+
         //------------------------------
         // private methods
         //------------------------------

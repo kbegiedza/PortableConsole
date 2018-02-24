@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 564697669}
   - component: {fileID: 564697668}
   m_Layer: 0
-  m_Name: Button
+  m_Name: ScrollLockButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,7 +219,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 564697668}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2059232481}
+        m_MethodName: OnScrollLockButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!222 &564697670
@@ -286,7 +297,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300002, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -450,3 +461,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3855e25ada7e1d64ab70f62cf033d420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2059232481 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114064565972029786, guid: 14b544df49bee0a4fab1ef635441f8e7,
+    type: 2}
+  m_PrefabInternal: {fileID: 1254100474}
+  m_Script: {fileID: 11500000, guid: cdd362419052f4444bd6690f898dabcf, type: 3}
