@@ -10,5 +10,8 @@ namespace PortableConsole
         public Sprite InfoSprite;
         public Sprite WarningSprite;
         public Sprite ErrorSprite;
+
+        public Sprite ScrollLocked;
+        public Sprite ScrollUnlocked;
     }
 }

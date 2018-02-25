@@ -103,9 +103,13 @@ namespace PortableConsole
             HideConsoleContent();
         }
 
-        public void OnScrollLockButton()
+        public void OnScrollLockButton(Image scrollImage)
         {
             ScrollLocked = !ScrollLocked;
+
+            scrollImage.sprite = ScrollLocked ? 
+                _resources.DefaultStyle.ScrollLocked 
+                : _resources.DefaultStyle.ScrollUnlocked;
         }
 
         //------------------------------

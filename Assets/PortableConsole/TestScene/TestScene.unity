@@ -222,10 +222,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2059232481}
         m_MethodName: OnScrollLockButton
-        m_Mode: 1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 605131089}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -297,7 +297,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300002, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
+  m_Sprite: {fileID: 21300010, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

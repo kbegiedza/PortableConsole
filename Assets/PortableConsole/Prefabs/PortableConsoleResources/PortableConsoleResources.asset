@@ -17,3 +17,5 @@ MonoBehaviour:
     InfoSprite: {fileID: 21300012, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
     WarningSprite: {fileID: 21300006, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
     ErrorSprite: {fileID: 21300022, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
+    ScrollLocked: {fileID: 21300002, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
+    ScrollUnlocked: {fileID: 21300010, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
