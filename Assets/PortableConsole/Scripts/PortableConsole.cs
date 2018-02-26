@@ -112,6 +112,11 @@ namespace PortableConsole
                 : _resources.DefaultStyle.ScrollUnlocked;
         }
 
+        public void OnStackTraceCopyButton()
+        {
+            GUIUtility.systemCopyBuffer = _stackTraceContentText.text;
+        }
+
         //------------------------------
         // private methods
         //------------------------------
@@ -168,10 +173,10 @@ namespace PortableConsole
 
             //setup stack trace objects
             _stackTrace = _consoleContent.transform.Find("StackTrace").gameObject;
-            _stackTraceIcon = _stackTrace.transform.Find("Icon").GetComponent<Image>();
+            _stackTraceIcon = _stackTrace.transform.Find("TopBar").Find("Icon").GetComponent<Image>();
+            _stackTraceName = _stackTrace.transform.Find("TopBar").Find("Name").GetComponent<Text>();
             _stackTraceContent = _stackTrace.transform.Find("ScrollRect").Find("Viewport").Find("Content").GetComponent<RectTransform>();
             _stackTraceContentText = _stackTraceContent.transform.Find("Text").GetComponent<Text>();
-            _stackTraceName = _stackTrace.transform.Find("Name").GetComponent<Text>();
 
             //attach our logger to Unity's event
             Application.logMessageReceived += LogMessageReceived;
@@ -305,7 +310,7 @@ namespace PortableConsole
         private void ShowStackTrace(PortableConsoleLog log)
         {
             _stackTraceIcon.sprite = _resources.GetLogTypeIconSprite(log.LogType);
-            _stackTraceContentText.text = log.Details;
+            _stackTraceContentText.text = string.Format("{0}\n{1}",log.Name,log.Details);
             _stackTraceContent.sizeDelta = new Vector3(_stackTraceContent.sizeDelta.x, _stackTraceContentText.preferredHeight);
             _stackTraceName.text = log.Name;
 

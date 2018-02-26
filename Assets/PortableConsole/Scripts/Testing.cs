@@ -36,6 +36,17 @@ public class Testing : MonoBehaviour
         {
             Debug.LogError("holding F4");
         }
+
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            throw new System.NotImplementedException("Some message");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            GameObject obj = null;
+            obj.name = "nullptr";
+        }
     }
 
     //------------------------------
