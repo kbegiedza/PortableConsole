@@ -21,7 +21,6 @@ namespace PortableConsole
         [SerializeField]
         private bool _useDefaultButton = true;
 
-
         private RectTransform _logContainer;
         private GameObject _consoleContent;
         private Text InfoCounter;
@@ -33,6 +32,10 @@ namespace PortableConsole
         private RectTransform _stackTraceContent;
         private Text _stackTraceContentText;
         private Text _stackTraceName;
+
+        private GameObject _notification;
+        private Text _notificationText;
+        private Image _notificationImage;
 
         private List<PortableConsoleLog> _logs = new List<PortableConsoleLog>();
         private PortableConsoleLogType _logFilter = PortableConsoleLogType.Info | PortableConsoleLogType.Warning | PortableConsoleLogType.Error;
@@ -145,7 +148,6 @@ namespace PortableConsole
 
             RedrawConsoleLogs();
         }
-
     
         private void Setup()
         {
@@ -178,6 +180,14 @@ namespace PortableConsole
             _stackTraceContent = _stackTrace.transform.Find("ScrollRect").Find("Viewport").Find("Content").GetComponent<RectTransform>();
             _stackTraceContentText = _stackTraceContent.transform.Find("Text").GetComponent<Text>();
 
+            //setup notification
+            _notification = transform.Find("Canvas").Find("Notification").gameObject;
+            _notificationImage = _notification.transform.Find("NotificationImage").GetComponent<Image>();
+            _notificationText = _notificationImage.transform.Find("NotificationText").GetComponent<Text>();
+
+            //enable click on notification to open console
+            _notification.GetComponent<Button>().onClick.AddListener(ToggleContent);
+
             //attach our logger to Unity's event
             Application.logMessageReceived += LogMessageReceived;
 
@@ -186,15 +196,20 @@ namespace PortableConsole
 
         private void ShowConsoleContent()
         {
+            //show console
             _consoleContent.SetActive(true);
 
+            //hide toggle button and notifications
+            _notification.SetActive(false);
             _toggleButton.gameObject.SetActive(false);
         }
 
         private void HideConsoleContent()
         {
+            //show console
             _consoleContent.SetActive(false);
 
+            //hide button
             _toggleButton.gameObject.SetActive(true);
         }
 
@@ -225,6 +240,9 @@ namespace PortableConsole
             {
                 _logContainer.anchoredPosition = new Vector2(_logContainer.anchoredPosition.x, 100 * _logs.Count);
             }
+
+            //TODO: if show
+            ShowInGameNotification(currentLog);
 
             UpdateLogCount();
         }
@@ -286,6 +304,13 @@ namespace PortableConsole
 
             //update scroll rect's content size
             _logContainer.sizeDelta += size;
+        }
+
+        private void ShowInGameNotification(PortableConsoleLog log)
+        {
+            _notification.gameObject.SetActive(true);
+            _notificationImage.color = _resources.GetLogTypeColor(log.LogType);
+            _notificationText.text = log.Name;
         }
 
         private void UpdateLogCount()
