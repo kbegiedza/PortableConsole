@@ -19,3 +19,6 @@ MonoBehaviour:
     ErrorSprite: {fileID: 21300022, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
     ScrollLocked: {fileID: 21300002, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
     ScrollUnlocked: {fileID: 21300010, guid: 41ab2d1309ef7034fb3b7476e737d03b, type: 3}
+    WarningColor: {r: 1, g: 0.75686276, b: 0.08627451, a: 0.49019608}
+    ErrorColor: {r: 0.91764706, g: 0.2627451, b: 0.20784314, a: 0.49019608}
+    LogColor: {r: 0.039215688, g: 0.6666667, b: 0.9411765, a: 0.49019608}
