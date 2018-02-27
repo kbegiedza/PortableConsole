@@ -13,5 +13,9 @@ namespace PortableConsole
 
         public Sprite ScrollLocked;
         public Sprite ScrollUnlocked;
+
+        public Color WarningColor = new Color32(255, 193, 22, 125);
+        public Color ErrorColor = new Color32(234, 67, 53, 125);
+        public Color LogColor = new Color32(10, 170, 240, 125);
     }
 }

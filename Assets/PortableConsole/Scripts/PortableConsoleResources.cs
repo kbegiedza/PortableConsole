@@ -22,5 +22,19 @@ namespace PortableConsole
                     return DefaultStyle.ErrorSprite;
             }
         }
+
+        public Color GetLogTypeColor(PortableConsoleLogType type)
+        {
+            switch (type)
+            {
+                case PortableConsoleLogType.Info:
+                    return DefaultStyle.LogColor;
+                case PortableConsoleLogType.Warning:
+                    return DefaultStyle.WarningColor;
+                case PortableConsoleLogType.Error:
+                default:
+                    return DefaultStyle.ErrorColor;
+            }
+        }
     }
 }
