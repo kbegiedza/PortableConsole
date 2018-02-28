@@ -5,16 +5,23 @@ namespace PortableConsole
 {
     public class GameObjectPool
     {
+        public bool Growable { get; private set; }
         public GameObject Prefab { get; set; }
         public int Capacity;
+
+        private Transform _parent;
 
         private IList<GameObject> _pooledObjects;
         //------------------------------
         // public methods
         //------------------------------
-        public GameObjectPool(GameObject prefab)
+        public GameObjectPool(GameObject prefab, Transform parent, int poolSize, bool growable = true)
         {
+            Growable = growable;
+            Capacity = poolSize;
             Prefab = prefab;
+
+            _parent = parent;
             _pooledObjects = new List<GameObject>();
 
             Init();
@@ -22,12 +29,17 @@ namespace PortableConsole
 
         public GameObject GetGameObject()
         {
-            foreach(var obj in _pooledObjects)
+            foreach (var obj in _pooledObjects)
             {
-                if(!obj.activeInHierarchy)
+                if (!obj.activeInHierarchy)
                 {
                     return obj;
                 }
+            }
+
+            if (Growable)
+            {
+                return AddGameObjectToPool();
             }
 
             return null;
@@ -53,11 +65,13 @@ namespace PortableConsole
             Capacity = newSize;
         }
 
-        private void AddGameObjectToPool()
+        private GameObject AddGameObjectToPool()
         {
-            var newItem = Object.Instantiate(Prefab);
+            var newItem = Object.Instantiate(Prefab, _parent);
             newItem.SetActive(false);
             _pooledObjects.Add(newItem);
+
+            return newItem;
         }
     }
 }

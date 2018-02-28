@@ -83,7 +83,6 @@ namespace PortableConsole
                 EditorGUI.EndDisabledGroup();
             }
 
-
             serializedObject.ApplyModifiedProperties();
         }
         //------------------------------

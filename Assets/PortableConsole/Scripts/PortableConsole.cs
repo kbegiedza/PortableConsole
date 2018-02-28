@@ -37,6 +37,7 @@ namespace PortableConsole
         private Text _notificationText;
         private Image _notificationImage;
 
+        private GameObjectPool _logsPool;
         private List<PortableConsoleLog> _logs = new List<PortableConsoleLog>();
         private PortableConsoleLogType _logFilter = PortableConsoleLogType.Info | PortableConsoleLogType.Warning | PortableConsoleLogType.Error;
 
@@ -52,9 +53,10 @@ namespace PortableConsole
         //------------------------------
         private void Awake()
         {
-            Setup();
+            SearchAndSetupComponents();
 
-            _toggleButton.onClick.AddListener(ToggleContent);
+            //prepare logs pool
+            _logsPool = new GameObjectPool(_logTemplate, _logContainer, 301);
         }
 
         private void Start()
@@ -72,7 +74,7 @@ namespace PortableConsole
         {
             foreach (Transform child in _logContainer.transform)
             {
-                Destroy(child.gameObject);
+                child.gameObject.SetActive(false);
             }
 
             _logContainer.sizeDelta = Vector2.zero;
@@ -149,7 +151,7 @@ namespace PortableConsole
             RedrawConsoleLogs();
         }
     
-        private void Setup()
+        private void SearchAndSetupComponents()
         {
             //check for EventSystem and create if required
             var eventSystem = FindObjectOfType<EventSystem>();
@@ -188,6 +190,9 @@ namespace PortableConsole
             //enable click on notification to open console
             _notification.GetComponent<Button>().onClick.AddListener(ToggleContent);
 
+            //add toggle to toggle Button
+            _toggleButton.onClick.AddListener(ToggleContent);
+
             //attach our logger to Unity's event
             Application.logMessageReceived += LogMessageReceived;
 
@@ -198,6 +203,8 @@ namespace PortableConsole
         {
             //show console
             _consoleContent.SetActive(true);
+
+            RedrawConsoleLogs();
 
             //hide toggle button and notifications
             _notification.SetActive(false);
@@ -231,7 +238,8 @@ namespace PortableConsole
 
             _logCounters[currentLog.LogType]++;
 
-            if ((_logFilter & currentLog.LogType) == currentLog.LogType)
+            if ((_logFilter & currentLog.LogType) == currentLog.LogType 
+                && _consoleContent.activeInHierarchy)
             {
                 DrawConsoleLog(currentLog, currentCount);
             }
@@ -251,7 +259,7 @@ namespace PortableConsole
         {
             foreach (Transform t in _logContainer.transform)
             {
-                Destroy(t.gameObject);
+                t.gameObject.SetActive(false);
             }
             _logContainer.sizeDelta = Vector2.zero;
 
@@ -271,7 +279,8 @@ namespace PortableConsole
         private void DrawConsoleLog(PortableConsoleLog log, uint counter)
         {
             //create instance
-            var g = Instantiate(_logTemplate, _logContainer.transform).GetComponent<RectTransform>();
+            var g = _logsPool.GetGameObject().GetComponent<RectTransform>();
+            g.transform.SetParent(_logContainer.transform);
 
             var button = g.GetComponent<Button>();
             button.onClick = new Button.ButtonClickedEvent();
@@ -299,8 +308,13 @@ namespace PortableConsole
             var size = new Vector2(0, 100);
             var offset = (size / 2f) + size * counter;
 
+            g.anchoredPosition = Vector2.zero;
+
             g.sizeDelta = size;
             g.anchoredPosition -= offset;
+
+            //show gameobject
+            g.gameObject.SetActive(true);
 
             //update scroll rect's content size
             _logContainer.sizeDelta += size;
@@ -308,6 +322,11 @@ namespace PortableConsole
 
         private void ShowInGameNotification(PortableConsoleLog log)
         {
+            if(_consoleContent.activeInHierarchy)
+            {
+                return;
+            }
+
             _notification.gameObject.SetActive(true);
             _notificationImage.color = _resources.GetLogTypeColor(log.LogType);
             _notificationText.text = log.Name;
