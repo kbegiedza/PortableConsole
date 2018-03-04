@@ -30,7 +30,7 @@ namespace PortableConsole
         private GameObject _stackTrace;
         private Image _stackTraceIcon;
         private RectTransform _stackTraceContent;
-        private Text _stackTraceContentText;
+        private InputField _stackTraceContentText;
         private Text _stackTraceName;
 
         private GameObject _notification;
@@ -180,7 +180,7 @@ namespace PortableConsole
             _stackTraceIcon = _stackTrace.transform.Find("TopBar").Find("Icon").GetComponent<Image>();
             _stackTraceName = _stackTrace.transform.Find("TopBar").Find("Name").GetComponent<Text>();
             _stackTraceContent = _stackTrace.transform.Find("ScrollRect").Find("Viewport").Find("Content").GetComponent<RectTransform>();
-            _stackTraceContentText = _stackTraceContent.transform.Find("Text").GetComponent<Text>();
+            _stackTraceContentText = _stackTraceContent.transform.Find("TextField").GetComponent<InputField>();
 
             //setup notification
             _notification = transform.Find("Canvas").Find("Notification").gameObject;
