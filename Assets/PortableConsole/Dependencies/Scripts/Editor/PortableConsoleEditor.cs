@@ -14,10 +14,8 @@ namespace PortableConsole
 
         private bool _resourceToggle = false;
         private bool _advancedToggle = false;
-        //------------------------------
-        // Unity methods
-        //------------------------------
 
+        private PortableConsole _script;
         [MenuItem("PortableConsole/CreateInstance")]
         public static void CreateInstance()
         {
@@ -31,22 +29,32 @@ namespace PortableConsole
             _logTemplate = serializedObject.FindProperty("_logTemplate");
             _toggleButton = serializedObject.FindProperty("_toggleButton");
             _useDefaultButton = serializedObject.FindProperty("_useDefaultButton");
+
+            _script = (PortableConsole)target;
         }
 
         public override void OnInspectorGUI()
         {
+            DrawToggleButtonSection();
             EditorGUILayout.Space();
+            DrawAdvancedOptions();
 
-            var script = (PortableConsole)target;
+            serializedObject.ApplyModifiedProperties();
+        }
 
+        /// <summary>
+        /// Draws toggle button selection section
+        /// </summary>
+        private void DrawToggleButtonSection()
+        {
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(_useDefaultButton);
             var defaultChanged = EditorGUI.EndChangeCheck();
             if (_useDefaultButton.boolValue)
             {
-                if(defaultChanged)
+                if (defaultChanged)
                 {
-                    _toggleButton.objectReferenceValue = script.gameObject.transform.Find("Canvas").Find("DefaultOpenButton").gameObject;
+                    _toggleButton.objectReferenceValue = _script.gameObject.transform.Find("Canvas").Find("DefaultOpenButton").gameObject;
                 }
 
                 EditorGUI.BeginDisabledGroup(true);
@@ -64,13 +72,17 @@ namespace PortableConsole
 
                 EditorGUILayout.PropertyField(_toggleButton);
             }
+        }
 
-            EditorGUILayout.Space();
-
+        /// <summary>
+        /// Draws advanced options section
+        /// </summary>
+        private void DrawAdvancedOptions()
+        {
             _advancedToggle = EditorGUILayout.Foldout(_advancedToggle, "Advanced options:");
             if (_advancedToggle)
             {
-                if(GUILayout.Button(_resourceToggle ? "Lock" : "Unlock"))
+                if (GUILayout.Button(_resourceToggle ? "Lock" : "Unlock"))
                 {
                     _resourceToggle = !_resourceToggle;
                 }
@@ -82,19 +94,6 @@ namespace PortableConsole
                 }
                 EditorGUI.EndDisabledGroup();
             }
-
-            serializedObject.ApplyModifiedProperties();
         }
-        //------------------------------
-        // public methods
-        //------------------------------
-
-        //------------------------------
-        // private methods
-        //------------------------------
-
-        //------------------------------
-        // coroutines
-        //------------------------------
     }
 }

@@ -6,9 +6,19 @@ using UnityEngine.UI;
 
 namespace PortableConsole
 {
+    /// <summary>
+    /// Main class for PortableConsole plugin
+    /// </summary>
     public class PortableConsole : MonoBehaviour
     {
         private static string _defaultEventSystemName = "DefaultEventSystem";
+
+        private readonly Dictionary<PortableConsoleLogType, uint> _logCounters = new Dictionary<PortableConsoleLogType, uint>
+        {
+            { PortableConsoleLogType.Info, 0},
+            { PortableConsoleLogType.Warning, 0},
+            { PortableConsoleLogType.Error, 0},
+        };
 
         public bool ScrollLocked = false;
 
@@ -37,16 +47,11 @@ namespace PortableConsole
         private Text _notificationText;
         private Image _notificationImage;
 
+        private float _logHeight = 0;
+
         private GameObjectPool _logsPool;
         private List<PortableConsoleLog> _logs = new List<PortableConsoleLog>();
         private PortableConsoleLogType _logFilter = PortableConsoleLogType.Info | PortableConsoleLogType.Warning | PortableConsoleLogType.Error;
-
-        private Dictionary<PortableConsoleLogType, uint> _logCounters = new Dictionary<PortableConsoleLogType, uint>
-        {
-            { PortableConsoleLogType.Info, 0},
-            { PortableConsoleLogType.Warning, 0},
-            { PortableConsoleLogType.Error, 0},
-        };
 
         //------------------------------
         // Unity methods
@@ -59,25 +64,12 @@ namespace PortableConsole
             _logsPool = new GameObjectPool(_logTemplate, _logContainer, 301);
         }
 
-        private void Start()
-        {
-        }
-
-        private void Update()
-        {
-        }
-
         //------------------------------
         // public methods
         //------------------------------
         public void OnClickClearButton()
         {
-            foreach (Transform child in _logContainer.transform)
-            {
-                child.gameObject.SetActive(false);
-            }
-
-            _logContainer.sizeDelta = Vector2.zero;
+            ClearDisplayedLogs();
 
             _logs.Clear();
             foreach (var key in _logCounters.Keys.ToList())
@@ -103,11 +95,6 @@ namespace PortableConsole
             ToggleLogTypeButton(image, PortableConsoleLogType.Error);
         }
 
-        public void ToggleLogTypeButton(Image image, PortableConsoleLogType type)
-        {
-            image.color = (ChangeFilter(type)) ? Color.white : Color.gray;
-        }
-
         public void OnClickCloseButton()
         {
             HideConsoleContent();
@@ -130,6 +117,19 @@ namespace PortableConsole
         //------------------------------
         // private methods
         //------------------------------
+        /// <summary>
+        /// Toggles filter and given image based on filter's flags change.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="type"></param>
+        private void ToggleLogTypeButton(Image image, PortableConsoleLogType type)
+        {
+            image.color = (ChangeFilter(type)) ? Color.white : Color.gray;
+        }
+
+        /// <summary>
+        /// Toggles console visibility
+        /// </summary>
         private void ToggleContent()
         {
             if (_consoleContent.activeInHierarchy)
@@ -142,6 +142,11 @@ namespace PortableConsole
             }
         }
 
+        /// <summary>
+        /// Changes filter - updates filer's flags.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private bool ChangeFilter(PortableConsoleLogType type)
         {
             if ((_logFilter & type) == type)
@@ -162,6 +167,9 @@ namespace PortableConsole
             }
         }
     
+        /// <summary>
+        /// Searches and prepare all required components.
+        /// </summary>
         private void SearchAndSetupComponents()
         {
             //check for EventSystem and create if required
@@ -205,11 +213,14 @@ namespace PortableConsole
             _toggleButton.onClick.AddListener(ToggleContent);
 
             //attach our logger to Unity's event
-            Application.logMessageReceived += LogMessageReceived;
+            Application.logMessageReceived += OnLogMessageReceived;
 
             UpdateLogCount();
         }
 
+        /// <summary>
+        /// Shows console.
+        /// </summary>
         private void ShowConsoleContent()
         {
             //show console
@@ -222,6 +233,9 @@ namespace PortableConsole
             _toggleButton.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Hides console.
+        /// </summary>
         private void HideConsoleContent()
         {
             //show console
@@ -231,7 +245,13 @@ namespace PortableConsole
             _toggleButton.gameObject.SetActive(true);
         }
 
-        private void LogMessageReceived(string condition, string stackTrace, LogType type)
+        /// <summary>
+        /// Callback for Unity's <see cref="Application.logMessageReceived"/>.
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="stackTrace"></param>
+        /// <param name="type"></param>
+        private void OnLogMessageReceived(string condition, string stackTrace, LogType type)
         {
             var currentLog = new PortableConsoleLog(type, condition, stackTrace);
 
@@ -257,22 +277,32 @@ namespace PortableConsole
 
             if(!ScrollLocked)
             {
-                _logContainer.anchoredPosition = new Vector2(_logContainer.anchoredPosition.x, 100 * _logs.Count);
+                _logContainer.anchoredPosition = new Vector2(_logContainer.anchoredPosition.x, _logHeight * _logs.Count);
             }
 
-            //TODO: if show
             ShowInGameNotification(currentLog);
 
             UpdateLogCount();
         }
 
-        private void RedrawConsoleLogs()
+        /// <summary>
+        /// Clears displayed logs
+        /// </summary>
+        private void ClearDisplayedLogs()
         {
             foreach (Transform t in _logContainer.transform)
             {
                 t.gameObject.SetActive(false);
             }
             _logContainer.sizeDelta = Vector2.zero;
+        }
+
+        /// <summary>
+        /// Clears and redraws all logs.
+        /// </summary>
+        private void RedrawConsoleLogs()
+        {
+            ClearDisplayedLogs();
 
             uint i = 0;
             foreach (var l in _logs)
@@ -287,13 +317,18 @@ namespace PortableConsole
             }
         }
 
+        /// <summary>
+        /// Draws given <see cref="PortableConsoleLog"/>.
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="counter"></param>
         private void DrawConsoleLog(PortableConsoleLog log, uint counter)
         {
             //create instance
-            var g = _logsPool.GetGameObject().GetComponent<RectTransform>();
-            g.transform.SetParent(_logContainer.transform);
+            var newLog = _logsPool.GetGameObject().GetComponent<RectTransform>();
+            newLog.transform.SetParent(_logContainer.transform);
 
-            var button = g.GetComponent<Button>();
+            var button = newLog.GetComponent<Button>();
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener(() => 
             {
@@ -301,36 +336,42 @@ namespace PortableConsole
             });
 
             //set background color
-            var bg = g.GetComponent<Image>();
+            var bg = newLog.GetComponent<Image>();
             bg.color = ((counter & 1) == 0) ? _resources.DefaultStyle.FirstColor : _resources.DefaultStyle.SecondColor;
 
             //set correspond image
-            var icon = g.transform.Find("Icon").GetComponent<Image>();
-            icon.sprite = _resources.GetLogTypeIconSprite(log.LogType);
+            var icon = newLog.transform.Find("Icon").GetComponent<Image>();
+            icon.sprite = _resources.GetIconSpriteFromLogType(log.LogType);
 
             //update text content
-            var logContent = g.transform.Find("Content").GetComponent<Text>();
-            var logCaster = g.transform.Find("Caster").GetComponent<Text>();
+            var logContent = newLog.transform.Find("Content").GetComponent<Text>();
+            var logCaster = newLog.transform.Find("Caster").GetComponent<Text>();
 
             logContent.text = log.Name;
             logCaster.text = log.Caster;
 
             //manage item's position and size
-            var size = new Vector2(0, 100);
-            var offset = (size / 2f) + size * counter;
 
-            g.anchoredPosition = Vector2.zero;
+            if(_logHeight != newLog.sizeDelta.y)
+            {
+                _logHeight = newLog.sizeDelta.y;
+            }
 
-            g.sizeDelta = size;
-            g.anchoredPosition -= offset;
+            var offset = (newLog.sizeDelta / 2f) + newLog.sizeDelta * counter;
+            newLog.anchoredPosition = Vector2.zero;
+            newLog.anchoredPosition -= offset;
 
             //show gameobject
-            g.gameObject.SetActive(true);
+            newLog.gameObject.SetActive(true);
 
             //update scroll rect's content size
-            _logContainer.sizeDelta += size;
+            _logContainer.sizeDelta += newLog.sizeDelta;
         }
 
+        /// <summary>
+        /// Shows notification on overlay screen.
+        /// </summary>
+        /// <param name="log"></param>
         private void ShowInGameNotification(PortableConsoleLog log)
         {
             if(_consoleContent.activeInHierarchy)
@@ -339,10 +380,13 @@ namespace PortableConsole
             }
 
             _notification.gameObject.SetActive(true);
-            _notificationImage.color = _resources.GetLogTypeColor(log.LogType);
+            _notificationImage.color = _resources.GetColorFromLogType(log.LogType);
             _notificationText.text = log.Name;
         }
 
+        /// <summary>
+        /// Updates logs' text components.
+        /// </summary>
         private void UpdateLogCount()
         {
             InfoCounter.text = GetCounterText(_logCounters[PortableConsoleLogType.Info]);
@@ -350,6 +394,11 @@ namespace PortableConsole
             ErrorCounter.text = GetCounterText(_logCounters[PortableConsoleLogType.Error]);
         }
 
+        /// <summary>
+        /// Returns corresponding log's count text to display.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private string GetCounterText(uint value)
         {
             if (value < 100)
@@ -362,17 +411,19 @@ namespace PortableConsole
             }
         }
 
+        /// <summary>
+        /// Shows stack trace for given <see cref="PortableConsoleLog"/>.
+        /// </summary>
+        /// <param name="log"></param>
         private void ShowStackTrace(PortableConsoleLog log)
         {
-            _stackTraceIcon.sprite = _resources.GetLogTypeIconSprite(log.LogType);
+            //update stack trace panel's content
+            _stackTraceIcon.sprite = _resources.GetIconSpriteFromLogType(log.LogType);
             _stackTraceContentText.text = string.Format("{0}\n{1}",log.Name,log.Details);
             _stackTraceContent.sizeDelta = new Vector3(_stackTraceContent.sizeDelta.x, _stackTraceContentText.preferredHeight);
             _stackTraceName.text = log.Name;
 
             _stackTrace.SetActive(true);
         }
-        //------------------------------
-        // coroutines
-        //------------------------------
     }
 }

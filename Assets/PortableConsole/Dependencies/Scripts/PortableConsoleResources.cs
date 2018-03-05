@@ -1,15 +1,20 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
-#endif
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PortableConsole
 {
+    /// <summary>
+    /// <see cref="PortableConsole"/>'s resource handler
+    /// </summary>
     public class PortableConsoleResources : ScriptableObject
     {
         public PortableConsoleStyle DefaultStyle;
 
-        public Sprite GetLogTypeIconSprite(PortableConsoleLogType type)
+        /// <summary>
+        /// Returns icon's <see cref="Sprite"/> depended on <see cref="PortableConsoleLogType"/>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public Sprite GetIconSpriteFromLogType(PortableConsoleLogType type)
         {
             switch (type)
             {
@@ -23,7 +28,12 @@ namespace PortableConsole
             }
         }
 
-        public Color GetLogTypeColor(PortableConsoleLogType type)
+        /// <summary>
+        /// Returns <see cref="Color"/> depended on <see cref="PortableConsoleLogType"/>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public Color GetColorFromLogType(PortableConsoleLogType type)
         {
             switch (type)
             {

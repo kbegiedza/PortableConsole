@@ -245,32 +245,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114694895459707040, guid: 14b544df49bee0a4fab1ef635441f8e7,
-        type: 2}
-      propertyPath: m_CaretBlinkRate
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114694895459707040, guid: 14b544df49bee0a4fab1ef635441f8e7,
-        type: 2}
-      propertyPath: m_Interactable
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114694895459707040, guid: 14b544df49bee0a4fab1ef635441f8e7,
-        type: 2}
-      propertyPath: m_TargetGraphic
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114694895459707040, guid: 14b544df49bee0a4fab1ef635441f8e7,
-        type: 2}
-      propertyPath: m_Transition
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114694895459707040, guid: 14b544df49bee0a4fab1ef635441f8e7,
-        type: 2}
-      propertyPath: m_Navigation.m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114494299952706638, guid: 14b544df49bee0a4fab1ef635441f8e7, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 14b544df49bee0a4fab1ef635441f8e7, type: 2}
   m_IsPrefabParent: 0
