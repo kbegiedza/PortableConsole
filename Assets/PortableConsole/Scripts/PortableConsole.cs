@@ -88,19 +88,24 @@ namespace PortableConsole
             UpdateLogCount();
         }
 
-        public void OnClickInfoButton()
+        public void OnClickInfoButton(Image image)
         {
-            ChangeFilter(PortableConsoleLogType.Info);
+            ToggleLogTypeButton(image, PortableConsoleLogType.Info);
         }
 
-        public void OnClickWarningButton()
+        public void OnClickWarningButton(Image image)
         {
-            ChangeFilter(PortableConsoleLogType.Warning);
+            ToggleLogTypeButton(image, PortableConsoleLogType.Warning);
         }
 
-        public void OnClickErrorButton()
+        public void OnClickErrorButton(Image image)
         {
-            ChangeFilter(PortableConsoleLogType.Error);
+            ToggleLogTypeButton(image, PortableConsoleLogType.Error);
+        }
+
+        public void ToggleLogTypeButton(Image image, PortableConsoleLogType type)
+        {
+            image.color = (ChangeFilter(type)) ? Color.white : Color.gray;
         }
 
         public void OnClickCloseButton()
@@ -137,18 +142,24 @@ namespace PortableConsole
             }
         }
 
-        private void ChangeFilter(PortableConsoleLogType type)
+        private bool ChangeFilter(PortableConsoleLogType type)
         {
             if ((_logFilter & type) == type)
             {
                 _logFilter = _logFilter & ~type;
+
+                RedrawConsoleLogs();
+
+                return false;
             }
             else
             {
                 _logFilter = (_logFilter | type);
-            }
 
-            RedrawConsoleLogs();
+                RedrawConsoleLogs();
+
+                return true;
+            }
         }
     
         private void SearchAndSetupComponents()
