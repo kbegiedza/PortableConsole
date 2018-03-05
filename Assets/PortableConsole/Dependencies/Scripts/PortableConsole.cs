@@ -211,6 +211,7 @@ namespace PortableConsole
 
             //add toggle to toggle Button
             _toggleButton.onClick.AddListener(ToggleContent);
+            _toggleButton.gameObject.SetActive(true);
 
             //attach our logger to Unity's event
             Application.logMessageReceived += OnLogMessageReceived;

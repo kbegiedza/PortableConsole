@@ -35,6 +35,7 @@ namespace PortableConsole
 
         public override void OnInspectorGUI()
         {
+            EditorGUILayout.Space();
             DrawToggleButtonSection();
             EditorGUILayout.Space();
             DrawAdvancedOptions();
@@ -54,7 +55,9 @@ namespace PortableConsole
             {
                 if (defaultChanged)
                 {
-                    _toggleButton.objectReferenceValue = _script.gameObject.transform.Find("Canvas").Find("DefaultOpenButton").gameObject;
+                    var gameObject = _script.gameObject.transform.Find("Canvas").Find("DefaultOpenButton").gameObject;
+                    gameObject.SetActive(true);
+                    _toggleButton.objectReferenceValue = gameObject;
                 }
 
                 EditorGUI.BeginDisabledGroup(true);
@@ -67,6 +70,8 @@ namespace PortableConsole
             {
                 if (defaultChanged)
                 {
+                    var gameObject = _script.gameObject.transform.Find("Canvas").Find("DefaultOpenButton").gameObject;
+                    gameObject.SetActive(false);
                     _toggleButton.objectReferenceValue = null;
                 }
 
