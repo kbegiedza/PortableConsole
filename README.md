@@ -11,5 +11,6 @@ If you want, check out PortableConsoleResources for more customizable items.
 
 Source available via GitHub:
 https://github.com/Ursanon/PortableConsole
+
 --------------------
 PortableConsole: Version 1.0.0
