@@ -33,6 +33,7 @@ namespace PortableConsole
 
         private RectTransform _logContainer;
         private GameObject _consoleContent;
+        private ScrollRect _mainScrollRect;
         private Text InfoCounter;
         private Text WarningCounter;
         private Text ErrorCounter;
@@ -46,8 +47,6 @@ namespace PortableConsole
         private GameObject _notification;
         private Text _notificationText;
         private Image _notificationImage;
-
-        private float _logHeight = 0;
 
         private GameObjectPool _logsPool;
         private List<PortableConsoleLog> _logs = new List<PortableConsoleLog>();
@@ -187,7 +186,8 @@ namespace PortableConsole
             }
 
             _consoleContent = transform.Find("Canvas").Find("Console").gameObject;
-            _logContainer = _consoleContent.transform.Find("MainContent").Find("Viewport").Find("Content").GetComponent<RectTransform>();
+            _mainScrollRect = _consoleContent.transform.Find("MainContent").GetComponent<ScrollRect>();
+            _logContainer = _mainScrollRect.content;
 
             var firstTopBar = _consoleContent.transform.Find("TopBar").Find("FirstTopBar");
             InfoCounter = firstTopBar.Find("ToggleInfoButton").Find("Counter").GetComponent<Text>();
@@ -278,7 +278,7 @@ namespace PortableConsole
 
             if(!ScrollLocked)
             {
-                _logContainer.anchoredPosition = new Vector2(_logContainer.anchoredPosition.x, _logHeight * _logs.Count);
+                _mainScrollRect.verticalNormalizedPosition = 0;
             }
 
             ShowInGameNotification(currentLog);
@@ -352,12 +352,6 @@ namespace PortableConsole
             logCaster.text = log.Caster;
 
             //manage item's position and size
-
-            if(_logHeight != newLog.sizeDelta.y)
-            {
-                _logHeight = newLog.sizeDelta.y;
-            }
-
             var offset = (newLog.sizeDelta / 2f) + newLog.sizeDelta * counter;
             newLog.anchoredPosition = Vector2.zero;
             newLog.anchoredPosition -= offset;

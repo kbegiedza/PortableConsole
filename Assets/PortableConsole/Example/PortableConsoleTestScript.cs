@@ -36,11 +36,6 @@ namespace PortableConsole
                 GameObject obj = null;
                 obj.name = "nullptr";
             }
-
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                ScreenCapture.CaptureScreenshot(string.Format("screen_{0}_{1}.png", Screen.width, Screen.height));
-            }
         }
     }
 }
