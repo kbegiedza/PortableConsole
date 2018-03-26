@@ -63,6 +63,21 @@ namespace PortableConsole
             _logsPool = new GameObjectPool(_logTemplate, _logContainer, 301);
         }
 
+        private void OnEnable()
+        {
+            //attach our logger to Unity's event
+            Application.logMessageReceived += OnLogMessageReceived;
+
+            UpdateLogCount();
+        }
+
+        private void OnDisable()
+        {
+            //detach our logger from Unity's event
+            Application.logMessageReceived -= OnLogMessageReceived;
+
+            UpdateLogCount();
+        }
         //------------------------------
         // public methods
         //------------------------------
