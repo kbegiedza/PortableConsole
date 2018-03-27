@@ -14,4 +14,4 @@ Source available via GitHub:
 https://github.com/Ursanon/PortableConsole
 
 --------------------
-PortableConsole: Version 1.0.0
+PortableConsole: Version 1.0.2

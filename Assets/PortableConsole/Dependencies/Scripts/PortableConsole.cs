@@ -78,6 +78,13 @@ namespace PortableConsole
 
             UpdateLogCount();
         }
+
+        private void OnDestroy()
+        {
+            //make sure that logger is detached from Unity's event
+            Application.logMessageReceived -= OnLogMessageReceived;
+        }
+        
         //------------------------------
         // public methods
         //------------------------------
